@@ -6,10 +6,15 @@
   <SCRIPT src="/socket.io/socket.io.js"></SCRIPT>
   <SCRIPT>
     var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
+	var votes = {}
 	socket.emit('register', {});
 
-  	socket.on('log', function(data){
-		document.getElementById("log").innerHTML += '<br>' + data.select;
+  	socket.on('onVote', function(data){
+  		document.getElementById("log").innerHTML += 
+	            '<br>' + data.name + 
+                ( (data.name in votes) ? " changed vote" : " voted");
+
+	    votes[data.name] = data.select;
 	});
   </SCRIPT>
   <SCRIPT>

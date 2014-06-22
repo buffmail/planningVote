@@ -50,7 +50,7 @@ io2.sockets.on('connection', function(socket){
 	});
     socket.on('reqVote', function(data){
 		console.log(data.name + ' voted : ' + data.select);
-		io2.sockets.emit('log', data);
+		io2.sockets.emit('onVote', data);
     });
 	socket.on('reqClearVote', function(data){
 		io2.sockets.emit('clearVote', {});
