@@ -5,50 +5,60 @@
 <BODY>
   <SCRIPT src="/socket.io/socket.io.js"></SCRIPT>
   <SCRIPT>
-	var getElemId = function(id){ return document.getElementById(id); };
     var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
+    var userName = "";
 
   	socket.on('log', function(data){
 		document.getElementById("log").innerHTML += '<br>' + data.select;
 	});
 
-    function sendVote(val) {
-        socket.emit('vote', {'select':val, 'name':selectedName});
+    function sendVote(name, val) {
+        socket.emit('vote', {'select':val, 'name':name});
     }
 
+    function turnOffChoice() {
+		var radioGroups = document.getElementsByName("day_duration");
+		for (var i=0; i < radioGroups.length; i++)
+			radioGroups[i].checked = false;
+	}
   </SCRIPT>
   <SCRIPT>
-	var selectedName = "none";
 	window.onload = function(){
-		getElemId("1day").onclick = function() {sendVote(1);};
-	    getElemId("3day").onclick = function() {sendVote(3);};
-	    getElemId("5day").onclick = function() {sendVote(5);};
-	    getElemId("name_select").onchange = function() {
-	        selectedName = this.options[this.selectedIndex].text;
-            console.log(selectedName);
-	    }
-	}
+		document.getElementById("name_select").onChange = function() {
+			turnOffChoice();
+	        userName = this.options[this.selectedIndex].value;
+			var nameSelectDivElem = document.getElementById("div_id_name_select");
+			nameSelectDivElem.style.visibility =
+				(this.selectedIndex === 0) ? "hidden" : "visible";
+	    };
+
+		var radioGroups = document.getElementsByName("day_duration");
+		for (var i=0; i < radioGroups.length; i++){
+			radioGroups[i].onclick = function() {
+				sendVote(userName, this.value);
+			};
+		};
+	};
   </SCRIPT>
 
   <P id="log">log area for client side</P>
 
-  <P id="name_select_p">
-	<SELECT id="name_select" name='username' size='1'>
-	  <OPTION value="none">이름선택</OPTION>
-	  <OPTION value="buffmail">buffmail</OPTION>
-	  <OPTION value="kran">kran</OPTION>
-	  <OPTION value="ohye">ohye</OPTION>
-	  <OPTION value="sentis">sentis</OPTION>
-	</SELECT>
-  </P>
+  <SELECT id="name_select" name='username' size='1'>
+    <OPTION value="">이름선택</OPTION>
+    <OPTION value="buffmail">buffmail</OPTION>
+    <OPTION value="kran">kran</OPTION>
+    <OPTION value="ohye">ohye</OPTION>
+    <OPTION value="sentis">sentis</OPTION>
+  </SELECT>
 
-  <P id="name_select_text">	</P>
-  <input type="radio" name="duration" id="1day" value="1"/>
-  <label for="1day">1 Day</label>
-  <input type="radio" name="duration" id="3day" value="3"/>
-  <label for="3day">3 Day</label>
-  <input type="radio" name="duration" id="5day" value="5"/>
-  <label for="5day">5 Day</label>
+  <div id="div_id_name_select" style="visibility:hidden">
+	<input type="radio" id="1day" name="day_duration" value="1"/>
+	<label for="1day">1 Day</label>
+	<input type="radio" id="3day" name="day_duration" value="3"/>
+	<label for="3day">3 Day</label>
+	<input type="radio" id="5day" name="day_duration" value="5"/>
+	<label for="5day">5 Day</label>
+  </div>
   
 </BODY>
 </HTML>  
