@@ -1,0 +1,41 @@
+<html>
+<head>
+
+</head>
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
+	socket.on('log', function(data){
+		document.getElementById("log").innerHTML += '<br>' + data.select;
+	});
+
+	window.onload = function(){
+	    var day1 = document.getElementById("1day");
+	    var day3 = document.getElementById("3day");
+	    var day5 = document.getElementById("5day");
+	    
+        day1.onclick = function() {sendVote(1);}
+        day3.onclick = function() {sendVote(3);}
+        day5.onclick = function() {sendVote(5);}
+	}
+
+    function sendVote(val) {
+        socket.emit('vote', {'select':val});
+    }
+
+  </script>
+
+  <p id="log">log area for client side</p>
+  <br>
+  <br>
+  <input type="radio" name="duration" id="1day" value="1"/>
+  <label for="1day">1 Day</label>
+  <input type="radio" name="duration" id="3day" value="3"/>
+  <label for="3day">3 Day</label>
+  <input type="radio" name="duration" id="5day" value="5"/>
+  <label for="5day">5 Day</label>
+  
+</body>
+</html>
+  
