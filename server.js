@@ -37,13 +37,15 @@ server.listen(8080);
 var io2 = io.listen(server);
 
 io2.sockets.on('connection', function(socket){
-    console.log("connected");
+	var connId = socket.conn.id;
+    console.log("connected " + connId);
+
 	socket.on('disconnection', function(){
 		console.log('disconnected');
 	});
     socket.on('vote', function(data){
-		console.log(data);
-		socket.emit('log', data);
+		console.log(data.name + ' voted : ' + data.select);
+		io2.sockets.emit('log', data);
     });
 });
 
