@@ -24,7 +24,7 @@
   </SCRIPT>
   <SCRIPT>
 	window.onload = function(){
-		document.getElementById("name_select").onChange = function() {
+		document.getElementById("name_select").onchange = function() {
 			turnOffChoice();
 	        userName = this.options[this.selectedIndex].value;
 			var nameSelectDivElem = document.getElementById("div_id_name_select");
