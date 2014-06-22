@@ -8,12 +8,8 @@
     var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
     var userName = "";
 
-  	socket.on('log', function(data){
-		document.getElementById("log").innerHTML += '<br>' + data.select;
-	});
-
     function sendVote(name, val) {
-        socket.emit('vote', {'select':val, 'name':name});
+        socket.emit('reqVote', {'select':val, 'name':name});
     }
 
     function turnOffChoice() {
@@ -21,6 +17,15 @@
 		for (var i=0; i < radioGroups.length; i++)
 			radioGroups[i].checked = false;
 	}
+
+  	socket.on('log', function(data){
+		document.getElementById("log").innerHTML += '<br>' + data.select;
+	});
+
+    socket.on('clearVote', function(data){
+        turnOffChoice();
+    });
+
   </SCRIPT>
   <SCRIPT>
 	window.onload = function(){

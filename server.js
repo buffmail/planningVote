@@ -10,7 +10,12 @@ var server = http.createServer(function(request, response) {
 
 	switch(path) {
 	case '/':
-		fs.readFile(voteHtmlPath, function(error,data) {
+	case '/control.html':
+		var fullPath = voteHtmlPath;
+		if (path !== '/')
+			fullPath = __dirname + path;
+
+		fs.readFile(fullPath, function(error,data) {
 			if (error) {
 				response.writeHead(404);
 				response.write("oops file doesn't exist - 404");
@@ -43,9 +48,12 @@ io2.sockets.on('connection', function(socket){
 	socket.on('disconnection', function(){
 		console.log('disconnected');
 	});
-    socket.on('vote', function(data){
+    socket.on('reqVote', function(data){
 		console.log(data.name + ' voted : ' + data.select);
 		io2.sockets.emit('log', data);
     });
+	socket.on('reqClearVote', function(data){
+		io2.sockets.emit('clearVote', {});
+	});
 });
 

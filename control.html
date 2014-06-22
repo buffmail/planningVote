@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+  <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</HEAD>
+<BODY>
+  <SCRIPT src="/socket.io/socket.io.js"></SCRIPT>
+  <SCRIPT>
+    var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
+	socket.emit('register', {});
+
+  	socket.on('log', function(data){
+		document.getElementById("log").innerHTML += '<br>' + data.select;
+	});
+  </SCRIPT>
+  <SCRIPT>
+	window.onload = function(){
+	    document.getElementById("id_btn_clear").onclick = function() {
+	        socket.emit("reqClearVote", {});
+	    };
+	}
+  </SCRIPT>
+
+  <P id="log"></P>
+  <INPUT type="button" id="id_btn_clear" value="Clear Vote"/>
+  
+</BODY>
+</HTML>  
