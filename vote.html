@@ -1,6 +1,37 @@
 <HTML>
 <HEAD>
   <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <STYLE>
+  body {
+      background-color: #d0e4fe;
+  }
+
+  h1 {
+      color: orange;
+      text-align: center;
+  }
+
+  p {
+      font-family: "Times New Roman";
+      font-size: 5em;
+  }
+
+  label {
+	  display: inline-block;
+	  font-size: 4em;
+  }
+
+  input[type=radio] {
+      border: 0px;
+      height: 1em;
+  }
+
+  select { 
+	  width: 10em;
+	  height: 3em;
+  }
+
+  </STYLE>
 </HEAD>
 <BODY>
   <SCRIPT src="/socket.io/socket.io.js"></SCRIPT>
@@ -16,6 +47,12 @@
 		var radioGroups = document.getElementsByName("day_duration");
 		for (var i=0; i < radioGroups.length; i++)
 			radioGroups[i].checked = false;
+
+		var labels = document.getElementsByTagName('LABEL');
+		for(var i=0; i<labels.length; i++){
+			labels[i].style.fontWeight = '';
+			labels[i].style.textDecoration = '';
+		}
 	}
 
   	socket.on('log', function(data){
@@ -26,6 +63,15 @@
         turnOffChoice();
     });
 
+    function boldage(el){
+        var radios = document.getElementsByTagName('INPUT');
+        for(var i=0; i<radios.length; i++){
+            if(radios[i].type == 'radio'){
+                radios[i].style.fontWeight = '';
+            }
+        }
+        el.style.fontWeight = 'bold';
+    };
   </SCRIPT>
   <SCRIPT>
 	window.onload = function(){
@@ -41,12 +87,27 @@
 		for (var i=0; i < radioGroups.length; i++){
 			radioGroups[i].onclick = function() {
 				sendVote(userName, this.value);
-			};
+
+				var labels = document.getElementsByTagName('LABEL');
+				for(var i=0; i<labels.length; i++){
+					if (labels[i].getAttribute("for") == this.id)
+					{
+						labels[i].style.fontWeight = 'bold';
+						labels[i].style.textDecoration = 'underline';
+
+					}
+					else
+					{
+						labels[i].style.fontWeight = '';
+						labels[i].style.textDecoration = '';
+					}
+				}
+            }
 		};
 	};
   </SCRIPT>
 
-  <P id="log">log area for client side</P>
+  <P id="log"></P>
 
   <SELECT id="name_select" name='username' size='1'>
     <OPTION value="">이름선택</OPTION>
@@ -63,12 +124,24 @@
   </SELECT>
 
   <div id="div_id_name_select" style="visibility:hidden">
+	<input type="radio" id="halfday" name="day_duration" value="0.5"/>
+	<label for="halfday">1/2 Day</label> 
 	<input type="radio" id="1day" name="day_duration" value="1"/>
 	<label for="1day">1 Day</label>
+	<input type="radio" id="2day" name="day_duration" value="2"/>
+	<label for="2day">2 Day</label>
 	<input type="radio" id="3day" name="day_duration" value="3"/>
 	<label for="3day">3 Day</label>
+	<br>
 	<input type="radio" id="5day" name="day_duration" value="5"/>
 	<label for="5day">5 Day</label>
+	<input type="radio" id="8day" name="day_duration" value="8"/>
+	<label for="8day">8 Day</label>
+	<input type="radio" id="13day" name="day_duration" value="13"/>
+	<label for="13day">13 Day</label>
+	<input type="radio" id="20day" name="day_duration" value="20"/>
+	<label for="20day">20 Day</label>
+	<br>
   </div>
   
 </BODY>
