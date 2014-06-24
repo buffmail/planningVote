@@ -20,6 +20,7 @@
 	    document.getElementById("name_" + data.name).checked = true
 
 		changeGraph(votes);
+	    changeDesc(votes);
 	});
 
     var barOptions = {
@@ -65,6 +66,32 @@
         var ctx = document.getElementById("myChart").getContext("2d");
         new Chart(ctx).Bar(barData, barOptions);
 	};
+	function changeDesc(userVote)
+	{
+	    var elem = document.getElementById("id_chart_desc");
+	    elem.innerHTML = "";
+
+	    var dataArray = new Array;
+	    for (var name in userVote){
+	        elem.innerHTML += "<BR>";
+            elem.innerHTML += name + " : " + userVote[name];
+	        dataArray.push(Number(userVote[name]));
+    	}
+	    dataArray.sort();
+        elem.innerHTML += "<BR>";
+	    if (dataArray.length > 2)
+    	{
+			elem.innerHTML += "<BR>최소값 : " + dataArray[0];
+			elem.innerHTML += "<BR>최대값 : " + dataArray[dataArray.length - 1];
+			dataArray.splice(0, 1);
+			dataArray.splice(dataArray.length - 1, 1);
+    	}
+		
+		var avg = dataArray.reduce(function(a, b){return a+b;}) / dataArray.length;
+        elem.innerHTML += "<BR>";
+		elem.innerHTML += "<BR><b>평균값 : " + avg + "</b>";
+		
+	};
   </SCRIPT>
   <SCRIPT>
 	window.onload = function(){
@@ -76,6 +103,7 @@
 	        socket.emit("reqClearVote", {});
 			votes = {};
 			changeGraph(votes);
+			changeDesc(votes);
 	    };
 		document.getElementById("id_btn_toggle_view").onclick = function() {
 		    showVote = !showVote;
@@ -112,6 +140,7 @@
 
   <DIV id="chartbox" style="display:none;">
     <CANVAS id="myChart" width="400" height="300"></CANVAS>
+	<P id="id_chart_desc"></P>
   </DIV>
 
 </BODY>
