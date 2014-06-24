@@ -12,8 +12,8 @@
   <SCRIPT>
     var socket = io.connect('http://buffmail.dnsdynamic.net:8080');
 	var votes = {}
+	var showVote = false;
 	socket.emit('register', {});
-	var mychart = null;
 
   	socket.on('onVote', function(data){
 	    votes[data.name] = data.select;
@@ -63,7 +63,7 @@
 		barOptions.scaleSteps = Math.max.apply(Math, barData.datasets[0].data);
 
         var ctx = document.getElementById("myChart").getContext("2d");
-        mychart = new Chart(ctx).Bar(barData, barOptions);
+        new Chart(ctx).Bar(barData, barOptions);
 	};
   </SCRIPT>
   <SCRIPT>
@@ -77,11 +77,24 @@
 			votes = {};
 			changeGraph(votes);
 	    };
+		document.getElementById("id_btn_toggle_view").onclick = function() {
+		    showVote = !showVote;
+			document.getElementById("kickbox").style.display =
+				(showVote) ? "none" : "block";
+			document.getElementById("chartbox").style.display =
+				(showVote) ? "block" : "none";
+		}
+		changeGraph(votes);
 	}
   </SCRIPT>
 
-
   <P id="log"></P>
+
+  <DIV>
+  <INPUT type="button" id="id_btn_clear" value="Clear Vote"/>
+  <INPUT type="button" id="id_btn_toggle_view" value="Toggle View"/>
+  </DIV>
+
   <DIV id="kickbox" class="my-box">
 	투표현황
 	<BR>
@@ -97,9 +110,9 @@
 	<INPUT type="checkbox" name="votecheck" id="name_zilpang" value="zilpang">zilpang</INPUT> 
   </DIV>
 
-  <CANVAS id="myChart" width="400" height="400"></CANVAS>
-  <BR>
-  <INPUT type="button" id="id_btn_clear" value="Clear Vote"/>
+  <DIV id="chartbox" style="display:none;">
+    <CANVAS id="myChart" width="400" height="300"></CANVAS>
+  </DIV>
 
 </BODY>
 </HTML>  
